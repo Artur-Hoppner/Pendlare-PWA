@@ -2,7 +2,12 @@
   <div class="home">
 <h1>Pendlaren</h1>
 
-<button>Geolocation</button>
+
+<h2>Stations:</h2>
+
+<!-- button execution getGetolocation (store.action: getLocation)  -->
+<button @click="getLocation()" >Get location (connecting )</button>
+
   </div>
 </template>
 
@@ -11,6 +16,14 @@
 export default {
   name: 'Home',
   components: {
-  }
+  },
+
+methods: {
+
+     getLocation() {
+       this.$store.dispatch('getLocation')
+     }
+}
+
 }
 </script>
