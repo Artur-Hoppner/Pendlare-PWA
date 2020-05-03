@@ -6,64 +6,88 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
       geolocation: [],
-      stations: [],
-      bussDeparture: []
+      stations: "",
+      bussDeparture: ""
 
   },
   mutations: {
     addGeolocation (state, item) {
-      console.log(item.longitude, "current, location mutation")
       state.geolocation.push(item)
-      console.log(state.geolocation, "state")
+      console.log(typeof state.geolocation, 'store.state.geolocation[]')
 
     },
 
     addStations(state, item) {
-      state.stations.push(item)
-      console.log(state.stations, "station in state")
+      state.stations = item.StopLocation
+      console.log(state.stations, 'store.state.stations[]')
     },
-    // addbussDeparture(state, item) {
-    //   state.bussDeparture.push({item})
-    // },
+    addbussDeparture(state, item) {
+      state.bussDeparture = item.Departure
+      console.log(state.bussDeparture, 'store.state.bussDeparture[]')
+
+    },
 
   },
 
   actions: {
      getLocation({commit, dispatch}) {
+      console.log("Executing Action getLocation")
       if (navigator.geolocation) {
-           navigator.geolocation.getCurrentPosition(  (position) =>{
-             console.log("get")
-             let currentLocation = position.coords;
-             console.log(currentLocation, "current, location action");
-             commit("addGeolocation", currentLocation);
-             dispatch('getReseplanerare');
+            navigator.geolocation.getCurrentPosition( async (position) =>{
+             let currentLocation = await position.coords;
+              commit("addGeolocation", currentLocation);
+              dispatch('getTidtabellavgång');
 
          })} else {
              console.log("Error, cant get Geolocation!");
          }
      },
 
-     async getReseplanerare({commit}) {
-       console.log("stating getReseplanerare")
-      // const apiKeyReseplanerare = '52f3c92f-0f19-4ac4-92d1-72da58f3e3ec'
-      // const baseUrlReseplanerare = "https://api.resrobot.se/v2/location.nearbystops?"
-      // let latitude = currentLocation.latitude;
-      // console.log("Getting Latitude;", latitude)
-      // let longitude = currentLocation.longitude;
-      // console.log("Getting Longitude;",longitude)
+     // Getting station data from API
+    async getReseplanerare({commit}){
+
+      console.log("Executing Action getReseplanerare")
+        const apiKeyReseplanerare = '52f3c92f-0f19-4ac4-92d1-72da58f3e3ec'
+        const baseUrlReseplanerare = "https://api.resrobot.se/v2/location.nearbystops?"
+        let latitude = 59.30352639999999
+        let longitude = 18.1403648
     
-      //   url = `https://api.resrobot.se/v2/location.nearbystops?key=52f3c92f-0f19-4ac4-92d1-72da58f3e3ec&originCoordLat=59.30352639999999&originCoordLong=18.1403648&format=json`;
+
+        let  url = `${baseUrlReseplanerare}key=${apiKeyReseplanerare}&originCoordLat=${latitude}&originCoordLong=${longitude}&format=json`;
       try{
-        let response = await fetch('https://api.resrobot.se/v2/location.nearbystops?key=52f3c92f-0f19-4ac4-92d1-72da58f3e3ec&originCoordLat=59.30352639999999&originCoordLong=18.1403648&format=json');
+        let response = await fetch(url);
         let data = await response.json();
         commit('addStations', data)
-        console.log(data, "data in async")
 
-        } catch (err) {
-          console.log(error, "error getReseplanerare", "9");
+         } catch (error) {
+             console.log(error, "error getReseplanerare");
       }
-    return
-    }
+
+
+      
+    // Getting avgångar data from API
+    },     async getTidtabellavgång({commit}){
+
+      console.log("Executing Action getTidtabellavgång")
+      const apiKeyTidtabell = '7b420a2e-669c-49f1-bb4d-e58c2a98db54';
+      const baseUrlTidtabellavgång = 'https://api.resrobot.se/v2/departureBoard?';
+      let valdHållplatsId = 740066200;
+    
+      let url = `${baseUrlTidtabellavgång}key=${apiKeyTidtabell}&id=${valdHållplatsId}&maxJourneys=2&format=json` 
+      
+      try{
+        let response = await fetch(url);
+        let data = await response.json();
+        commit('addbussDeparture', data)
+
+         } catch (error) {
+             console.log(error, "error getReseplanerare");
+      }
+
+    }, 
+
+
+
   },
 
   modules: {
