@@ -10,3 +10,11 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+
+
+
+
+
+
+// reigstrate sw Headers. Put it in public (sw.js)
