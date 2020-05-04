@@ -36,7 +36,7 @@ export default new Vuex.Store({
             navigator.geolocation.getCurrentPosition( async (position) =>{
              let currentLocation = await position.coords;
               commit("addGeolocation", currentLocation);
-              dispatch('getTidtabellavgång');
+              dispatch('getReseplanerare');
 
          })} else {
              console.log("Error, cant get Geolocation!");
@@ -66,14 +66,14 @@ export default new Vuex.Store({
 
       
     // Getting avgångar data from API
-    },     async getTidtabellavgång({commit}){
+    },     async getTidtabellavgång({commit}, stations){
 
       console.log("Executing Action getTidtabellavgång")
       const apiKeyTidtabell = '7b420a2e-669c-49f1-bb4d-e58c2a98db54';
       const baseUrlTidtabellavgång = 'https://api.resrobot.se/v2/departureBoard?';
-      let valdHållplatsId = 740066200;
+      let stationId = stations;
     
-      let url = `${baseUrlTidtabellavgång}key=${apiKeyTidtabell}&id=${valdHållplatsId}&maxJourneys=2&format=json` 
+      let url = `${baseUrlTidtabellavgång}key=${apiKeyTidtabell}&id=${stationId}&maxJourneys=2&format=json` 
       
       try{
         let response = await fetch(url);
