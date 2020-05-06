@@ -5,15 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-      geolocation: [],
+      geolocation: "",
       stations: "",
       bussDeparture: ""
 
   },
   mutations: {
     addGeolocation (state, item) {
-      state.geolocation.push(item)
-      console.log(typeof state.geolocation, 'store.state.geolocation[]')
+      state.geolocation = item;
+      console.log(state.geolocation, 'store.state.geolocation[]')
 
     },
 
@@ -30,42 +30,46 @@ export default new Vuex.Store({
   },
 
   actions: {
-     getLocation({commit, dispatch}) {
+// ***** GET GEOLOCATION *****
+     getLocation({commit}) {
       console.log("Executing Action getLocation")
       if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition( async (position) =>{
-             let currentLocation = await position.coords;
+            navigator.geolocation.getCurrentPosition( (position) =>{
+             let currentLocation =  position.coords;
               commit("addGeolocation", currentLocation);
-              dispatch('getReseplanerare');
+              // dispatch('getStations');
 
          })} else {
              console.log("Error, cant get Geolocation!");
          }
      },
 
-     // Getting station data from API
-    async getReseplanerare({commit}){
+     // ***** GETTING STATIONS DATA FROM API *****
+    async getStations({commit, state}){
 
-      console.log("Executing Action getReseplanerare")
+      console.log("Executing Action getStations")
+      console.log(state.geolocation.latitude, "latitude in get station")
         const apiKeyReseplanerare = '52f3c92f-0f19-4ac4-92d1-72da58f3e3ec'
         const baseUrlReseplanerare = "https://api.resrobot.se/v2/location.nearbystops?"
-        let latitude = 59.30352639999999
-        let longitude = 18.1403648
+
+        let latitude = state.geolocation.latitude
+        let longitude = state.geolocation.longitude
     
 
         let  url = `${baseUrlReseplanerare}key=${apiKeyReseplanerare}&originCoordLat=${latitude}&originCoordLong=${longitude}&format=json`;
       try{
+
         let response = await fetch(url);
         let data = await response.json();
         commit('addStations', data)
 
          } catch (error) {
-             console.log(error, "error getReseplanerare");
+             console.log(error, "error getStations");
       }
 
 
       
-    // Getting avgångar data from API
+    // ***** GETTING DEPARTURE DATA FROM API *****
     },     async getTidtabellavgång({commit}, stations){
 
       console.log("Executing Action getTidtabellavgång")
@@ -81,11 +85,9 @@ export default new Vuex.Store({
         commit('addbussDeparture', data)
 
          } catch (error) {
-             console.log(error, "error getReseplanerare");
+             console.log(error, "error getStations");
       }
-
     }, 
-
 
 
   },

@@ -1,6 +1,6 @@
 <template>
-<div>
-
+<div class="background">
+<h1>Det här är sluthållplatsen</h1>
 <img src="../assets/iamdeath.jpg" alt=""></div>
 
 </template>
@@ -14,8 +14,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.background {
+    background-color: rgb(0, 0, 0);
+}
 img{
-    width: 100%;
+    width: 90%;
 }
 </style>
