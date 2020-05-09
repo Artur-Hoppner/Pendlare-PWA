@@ -6,21 +6,43 @@
 <h1>Pendlaren</h1>
 
 
-<h2>Stations:</h2>
+<h3>Resmedel</h3>
+<!-- two way binding with v-model through computed set & get and mutation that gives value of checkboxes to state.message[] -->
+<label for="buss">Buss</label>
+<input type="checkbox" id=128 value=128 v-model="vehicleNr">
+
+<label for="Tubbelbana">Tubbelbana</label>
+<input type="checkbox" id=32 value=32 v-model="vehicleNr">
+
+<label for="Regionaltåg">Regionaltåg</label>
+<input type="checkbox" id=4 value=4 v-model="vehicleNr">
+
+<label for="Färja">Färja</label>
+<input type="checkbox" id=256 value=256 v-model="vehicleNr">
 
 <!-- button execution getGetolocation (store.action: getLocation)  -->
+
 <button @click="getStaion()">Get stations</button>
 
+<h2>Stations:</h2>
 
 
 <section v-for="stations in showNearStations" :key="stations.id" class="shown-stations">
+  <div class="stations-container">
   <p>{{stations.name}}</p>
   <p>{{stations.dist}}meter</p>
 
-   <div><button @click="getTransportations(stations.id)">Get Transportations</button> </div> 
-
-
+</div>
+   <button @click="getTransportations(stations.id)">Get Transportations</button>
 </section>
+
+<!-- <select name="" id="">
+  <option  v-for="stations in showNearStations" :key="stations.id" @click="getTransportations(stations.id)">{{stations.name}}</option>
+</select> -->
+
+
+<h2>departure:</h2>
+
     <section v-for="bussDeparture in showDeparture" :key="bussDeparture.id" class="shown-departure">
       <p>{{bussDeparture.name}}</p>
       <p>{{bussDeparture.time}}</p>
@@ -28,11 +50,7 @@
 
     </section>
 
-        <section v-for="geolocation in geolocation" :key="geolocation.id" class="shown-departure">
-      <p>{{geolocation.longitude}}</p>
 
-
-    </section>
 
 </main>
   </div>
@@ -45,6 +63,7 @@ export default {
   components: {
   },
 
+
 computed: {
 
         geolocation(){
@@ -56,6 +75,14 @@ computed: {
       showDeparture(){
         return this.$store.state.bussDeparture;
       },
+      vehicleNr: {
+          get () {
+            return this.$store.state.vehicleNr
+          },
+          set (value) {
+            this.$store.commit('updateVehicleNr', value)
+      }
+  }
       
 
 },
@@ -93,4 +120,8 @@ watch: {
 border: solid 1px, rgb(10, 209, 209);
 }
 
+.stations-container {
+  border: solid 1px red;
+  width: 20vw;
+}
 </style>
