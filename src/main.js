@@ -1,3 +1,5 @@
+import { createNotification } from '../public/notifications';
+
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -21,7 +23,6 @@ function registerServiceWorker() {
 }
 
 registerServiceWorker()
-
 
 
 

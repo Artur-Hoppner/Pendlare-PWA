@@ -3,7 +3,7 @@
   "short_name": "Pendla",
   "theme_color": "#FFB9B9",
   "background_color": "#FFB9B9",
-  "display": "browser",
+  "display": "standalone",
   "Scope": "/",
   "start_url": "/",
   "icons": [

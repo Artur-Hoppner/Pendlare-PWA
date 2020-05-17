@@ -14,6 +14,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+body {
+    background-color: black;
+}
 .background {
     background-color: rgb(0, 0, 0);
 }
